@@ -38,6 +38,15 @@ jobs:
           simulator_version: "${{ matrix.target.simulator_version }}"
           xcode_path: "/Applications/Xcode_26.3.app"
 
+      - name: Configure if tests can be run
+        id: configure_if_tests_can_run
+        env:
+          PLATFORM: ${{ matrix.target.platform }}
+        run: |
+          CAN_TESTS_RUN=$PLATFORM == "macOS"
+          echo "can_tests_run: $CAN_TESTS_RUN"
+          echo "can_tests_run=$CAN_TESTS_RUN" >> "$GITHUB_OUTPUT"
+
       # ---------------------------
       # Build and test package
       # ---------------------------
@@ -54,6 +63,7 @@ jobs:
           CODE_SIGNING_REQUIRED=NO
 
       - name: Build package tests
+        if: ${{ steps.configure_if_tests_can_run.can_tests_run == true }}
         env:
           DESTINATION: ${{ steps.setup.outputs.destination }}
         run: xcodebuild build-for-testing
@@ -64,6 +74,7 @@ jobs:
           CODE_SIGNING_REQUIRED=NO
 
       - name: Run package tests
+        if: ${{ steps.configure_if_tests_can_run.can_tests_run == true }}
         env:
           DESTINATION: ${{ steps.setup.outputs.destination }}
           RESULTS_BUNDLE_PATH: ${{ steps.setup.outputs.test_results_path }}
@@ -75,7 +86,7 @@ jobs:
           CODE_SIGNING_REQUIRED=NO
 
       - name: Upload test results
-        if: success() || failure()
+        if: ${{ steps.configure_if_tests_can_run.can_tests_run == true }} && (success() || failure())
         uses: actions/upload-artifact@v4
         with:
           name: "${{ steps.setup.outputs.test_results_file_name }}"
