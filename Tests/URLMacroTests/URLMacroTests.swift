@@ -33,4 +33,24 @@ struct URLMacroTests {
             failureHandler: Issue.record(failure:)
         )
     }
+
+    @Test
+    func invalid() {
+        let input = "#url(\"\")"
+        let expectedResult = input
+
+        assertMacroExpansion(
+            input,
+            expandedSource: expectedResult,
+            diagnostics: [
+                DiagnosticSpec(
+                    message: "'' is not a valid URL",
+                    line: 1,
+                    column: 1
+                )
+            ],
+            macroSpecs: testMacros,
+            failureHandler: Issue.record(failure:)
+        )
+    }
 }

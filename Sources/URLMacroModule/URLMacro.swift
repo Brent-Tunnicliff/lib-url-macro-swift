@@ -12,7 +12,10 @@ public import SwiftSyntaxMacros
     #error("URLMacro requires Foundation or FoundationEssentials")
 #endif
 
+/// Macro for checking if url is valid at compile time and removing the usual optional.
 public struct URLMacro: ExpressionMacro {
+    /// Expand a macro described by the given freestanding macro expansion
+    /// within the given context to produce a replacement expression.
     public static func expansion(
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext
