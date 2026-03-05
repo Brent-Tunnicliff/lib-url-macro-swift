@@ -1,11 +1,18 @@
-# template-lib-apple
+# lib-url-macro-swift
 
-Template as a base for all my Apple libraries.
-Project contains the package and a nested demo app `Demo/`.
+Very simple package that contains the `#url` macro for creating a URL type from StaticString.
 
-If you want to run the Demo app, open its project file `Demo/Demo.xcodeproj`.
+If the input is not a valid url then throws a compile error.
 
-After generating the repository find all cases of `REPLACE_ME` and `REPLACE-ME` and rename them.
+This way we can create base urls from StaticString without having to worry about optionals or runtime errors.
+
+Example use:
+
+```swift
+let url: URL = #url("https://www.google.com")
+```
+
+Solution copied from [Swift by Sundell: Modern URL construction in Swift](https://www.swiftbysundell.com/articles/modern-url-construction-in-swift/)
 
 ## Source Stability
 

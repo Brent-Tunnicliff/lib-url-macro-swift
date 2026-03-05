@@ -1,34 +1,52 @@
 // swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
-// Copyright © 2025 Brent Tunnicliff <brent@tunnicliff.dev>
+// Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
+import CompilerPluginSupport
 import PackageDescription
 
 // MARK: - Package
 
 let package = Package(
-    name: "REPLACE_ME",
+    name: "lib-url-macro-swift",
     platforms: [
-        .iOS(.v26),
-        .macOS(.v26),
-        .tvOS(.v26),
-        .watchOS(.v26),
-        .visionOS(.v26),
+        .iOS(.v13),
+        .macOS(.v12),
+        .tvOS(.v13),
+        .watchOS(.v6),
+        .macCatalyst(.v13),
     ],
     products: [
         .library(
-            name: "REPLACE_ME",
-            targets: ["REPLACE_ME"]
+            name: "URLMacro",
+            targets: ["URLMacro"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/Brent-Tunnicliff/swift-format-plugin", .upToNextMajor(from: "2.0.0"))
+        .package(url: "https://github.com/Brent-Tunnicliff/swift-format-plugin", .upToNextMajor(from: "2.0.0")),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "602.0.0"),
     ],
     targets: [
-        .target(name: "REPLACE_ME"),
+        .macro(
+            name: "URLMacroModule",
+            dependencies: [
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            ]
+        ),
+        .target(
+            name: "URLMacro",
+            dependencies: ["URLMacroModule"]
+        ),
         .testTarget(
-            name: "REPLACE_METests",
-            dependencies: ["REPLACE_ME"]
+            name: "URLMacroTests",
+            dependencies: [
+                "URLMacroModule",
+                .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
+            ]
         ),
     ]
 )

@@ -7,10 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEMO_PROJECT: "Demo.xcodeproj"
-  DEMO_SCHEME: "Demo"
-  DEMO_WATCH_SCHEME: "Demo Watch App"
-  PACKAGE_SCHEME: "REPLACE_ME-Package"
+  PACKAGE_SCHEME: "lib-url-macro-swift-Package"
 
 jobs:
   test:
@@ -20,10 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { platform: "iOS", simulator_version: "26.1" },
-          { platform: "tvOS", simulator_version: "26.1" },
-          { platform: "watchOS", simulator_version: "26.1" },
-          { platform: "visionOS", simulator_version: "26.1" },
+          { platform: "iOS", simulator_version: "26.2" },
+          { platform: "tvOS", simulator_version: "26.2" },
+          { platform: "watchOS", simulator_version: "26.2" },
+          { platform: "visionOS", simulator_version: "26.2" },
 
           # macOS runs on the host and doesn't need a simulator.
           { platform: "macOS", simulator_version: "" }
@@ -39,7 +36,7 @@ jobs:
         with:
           platform: "${{ matrix.target.platform }}"
           simulator_version: "${{ matrix.target.simulator_version }}"
-          xcode_path: "/Applications/Xcode_26.1.app"
+          xcode_path: "/Applications/Xcode_26.3.app"
 
       # ---------------------------
       # Build and test package
@@ -96,44 +93,6 @@ jobs:
           -skipPackagePluginValidation
           CODE_SIGN_IDENTITY=""
           CODE_SIGNING_REQUIRED=NO
-
-      # ---------------------------
-      # Build demo
-      # ---------------------------
-
-      - name: Configure demo scheme
-        id: demo_scheme
-        env:
-          PLATFORM: ${{ matrix.target.platform }}
-        run: |
-          if [[ "$PLATFORM" == "watchOS" ]]; then
-            SCHEME="$DEMO_WATCH_SCHEME"
-          else
-            SCHEME="$DEMO_SCHEME"
-          fi
-
-          if [[ $SCHEME == "" ]]; then
-            echo "SCHEME missing"
-            exit 1
-          fi
-
-          echo $SCHEME
-          echo "scheme=$SCHEME" >> "$GITHUB_OUTPUT"
-
-      # We don't release demo, so only build the debug configuration.
-      - name: Build demo
-        working-directory: ./Demo
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-          SCHEME: ${{ steps.demo_scheme.outputs.scheme }}
-        run: xcodebuild build
-            -project "$DEMO_PROJECT"
-            -scheme "$SCHEME"
-            -destination "$DESTINATION"
-            -configuration "Debug"
-            -skipPackagePluginValidation
-            CODE_SIGN_IDENTITY=""
-            CODE_SIGNING_REQUIRED=NO
 
       # ---------------------------
       # Final checks
