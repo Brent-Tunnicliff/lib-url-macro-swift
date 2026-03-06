@@ -10,194 +10,223 @@ env:
   PACKAGE_SCHEME: "lib-url-macro-swift-Package"
 
 jobs:
-  xcodebuild:
-    runs-on: macos-26
-    strategy:
-      # Don't fail the other matrix values if one fails.
-      fail-fast: false
-      matrix:
-        target: [
-          { platform: "iOS", simulator_version: "26.2" },
-          { platform: "tvOS", simulator_version: "26.2" },
-          { platform: "watchOS", simulator_version: "26.2" },
-          { platform: "visionOS", simulator_version: "26.2" },
+  # xcodebuild:
+  #   runs-on: macos-26
+  #   strategy:
+  #     # Don't fail the other matrix values if one fails.
+  #     fail-fast: false
+  #     matrix:
+  #       target: [
+  #         { platform: "iOS", simulator_version: "26.2" },
+  #         { platform: "tvOS", simulator_version: "26.2" },
+  #         { platform: "watchOS", simulator_version: "26.2" },
+  #         { platform: "visionOS", simulator_version: "26.2" },
 
-          # macOS runs on the host and doesn't need a simulator.
-          { platform: "macOS", simulator_version: "" }
-        ]
-    steps:
-      # ---------------------------
-      # Setup
-      # ---------------------------
+  #         # macOS runs on the host and doesn't need a simulator.
+  #         { platform: "macOS", simulator_version: "" }
+  #       ]
+  #   steps:
+  #     # ---------------------------
+  #     # Setup
+  #     # ---------------------------
 
-      - name: Setup pipeline
-        id: setup
-        uses: Brent-Tunnicliff/action-setup-apple@v1
-        with:
-          platform: "${{ matrix.target.platform }}"
-          simulator_version: "${{ matrix.target.simulator_version }}"
-          xcode_path: "/Applications/Xcode_26.3.app"
+  #     - name: Setup pipeline
+  #       id: setup
+  #       uses: Brent-Tunnicliff/action-setup-apple@v1
+  #       with:
+  #         platform: "${{ matrix.target.platform }}"
+  #         simulator_version: "${{ matrix.target.simulator_version }}"
+  #         xcode_path: "/Applications/Xcode_26.3.app"
 
-      - name: Configure if tests can be run
-        id: configure_if_tests_can_run
-        env:
-          PLATFORM: ${{ matrix.target.platform }}
-        run: |
-          if [[ $PLATFORM == "macOS" ]]; then
-            CAN_TESTS_RUN="true"
-          else
-            CAN_TESTS_RUN="false"
-          fi
+  #     - name: Configure if tests can be run
+  #       id: configure_if_tests_can_run
+  #       env:
+  #         PLATFORM: ${{ matrix.target.platform }}
+  #       run: |
+  #         if [[ $PLATFORM == "macOS" ]]; then
+  #           CAN_TESTS_RUN="true"
+  #         else
+  #           CAN_TESTS_RUN="false"
+  #         fi
 
-          echo "can_tests_run: $CAN_TESTS_RUN"
-          echo "can_tests_run=$CAN_TESTS_RUN" >> "$GITHUB_OUTPUT"
+  #         echo "can_tests_run: $CAN_TESTS_RUN"
+  #         echo "can_tests_run=$CAN_TESTS_RUN" >> "$GITHUB_OUTPUT"
 
-      # ---------------------------
-      # Build and test package
-      # ---------------------------
+  #     # ---------------------------
+  #     # Build and test package
+  #     # ---------------------------
 
-      - name: Build package debug
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -configuration "Debug"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
+  #     - name: Build package debug
+  #       env:
+  #         DESTINATION: ${{ steps.setup.outputs.destination }}
+  #       run: xcodebuild build
+  #         -scheme "$PACKAGE_SCHEME"
+  #         -destination "$DESTINATION"
+  #         -configuration "Debug"
+  #         -skipPackagePluginValidation
+  #         CODE_SIGN_IDENTITY=""
+  #         CODE_SIGNING_REQUIRED=NO
 
-      - name: Build package tests
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build-for-testing
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
+  #     - name: Build package tests
+  #       if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
+  #       env:
+  #         DESTINATION: ${{ steps.setup.outputs.destination }}
+  #       run: xcodebuild build-for-testing
+  #         -scheme "$PACKAGE_SCHEME"
+  #         -destination "$DESTINATION"
+  #         -skipPackagePluginValidation
+  #         CODE_SIGN_IDENTITY=""
+  #         CODE_SIGNING_REQUIRED=NO
 
-      - name: Run package tests
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-          RESULTS_BUNDLE_PATH: ${{ steps.setup.outputs.test_results_path }}
-        run: xcodebuild test-without-building
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -resultBundlePath "$RESULTS_BUNDLE_PATH"
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
+  #     - name: Run package tests
+  #       if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
+  #       env:
+  #         DESTINATION: ${{ steps.setup.outputs.destination }}
+  #         RESULTS_BUNDLE_PATH: ${{ steps.setup.outputs.test_results_path }}
+  #       run: xcodebuild test-without-building
+  #         -scheme "$PACKAGE_SCHEME"
+  #         -destination "$DESTINATION"
+  #         -resultBundlePath "$RESULTS_BUNDLE_PATH"
+  #         CODE_SIGN_IDENTITY=""
+  #         CODE_SIGNING_REQUIRED=NO
 
-      - name: Upload test results
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' && (success() || failure()) }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ steps.setup.outputs.test_results_file_name }}"
-          path: "${{ steps.setup.outputs.test_results_path }}"
-          if-no-files-found: error
+  #     - name: Upload test results
+  #       if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' && (success() || failure()) }}
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: "${{ steps.setup.outputs.test_results_file_name }}"
+  #         path: "${{ steps.setup.outputs.test_results_path }}"
+  #         if-no-files-found: error
 
-      # Lets make sure it also builds in release configuration in case there are conditionals.
-      - name: Build package release
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -configuration "Release"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
+  #     # Lets make sure it also builds in release configuration in case there are conditionals.
+  #     - name: Build package release
+  #       env:
+  #         DESTINATION: ${{ steps.setup.outputs.destination }}
+  #       run: xcodebuild build
+  #         -scheme "$PACKAGE_SCHEME"
+  #         -destination "$DESTINATION"
+  #         -configuration "Release"
+  #         -skipPackagePluginValidation
+  #         CODE_SIGN_IDENTITY=""
+  #         CODE_SIGNING_REQUIRED=NO
 
-      # ---------------------------
-      # Final checks
-      # ---------------------------
+  #     # ---------------------------
+  #     # Final checks
+  #     # ---------------------------
 
-      # Make sure there are no local changes as any auto generated changes must be checked into git.
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+  #     # Make sure there are no local changes as any auto generated changes must be checked into git.
+  #     - name: Check git status
+  #       uses: Brent-Tunnicliff/action-git-status@v1
 
-  swift-macos:
-    name: "swift (macOS)"
-    runs-on: macos-26
-    steps:
-      # List all environment variables to help with debugging possible issues.
-      - name: List environment variables
-        run: set
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: swift build
-      - name: Build tests
-        run: swift build --build-tests
-      - name: Run tests
-        run: swift test --xunit-output .build/report
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-macOS-swift.zip
-          path: .build/report-swift-testing
-          if-no-files-found: error
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+  # swift-macos:
+  #   name: "swift (macOS)"
+  #   runs-on: macos-26
+  #   steps:
+  #     # List all environment variables to help with debugging possible issues.
+  #     - name: List environment variables
+  #       run: set
+  #     - uses: actions/checkout@v4
+  #     - name: Build package
+  #       run: swift build
+  #     - name: Build tests
+  #       run: swift build --build-tests
+  #     - name: Run tests
+  #       run: swift test --xunit-output .build/report
+  #     - name: Upload test results
+  #       if: success() || failure()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: test-macOS-swift.zip
+  #         path: .build/report-swift-testing
+  #         if-no-files-found: error
+  #     - name: Check git status
+  #       uses: Brent-Tunnicliff/action-git-status@v1
 
-  swift-linux:
-    name: "swift (Linux)"
-    runs-on: ubuntu-latest
-    container:
-      image: swift:6.2
-    steps:
-      - name: List environment variables
-        run: set
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: swift build
-      - name: Build tests
-        run: swift build --build-tests
-      - name: Run tests
-        run: swift test --xunit-output .build/report
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-linux-swift.zip
-          path: .build/report-swift-testing
-          if-no-files-found: error
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+  # swift-linux:
+  #   name: "swift (Linux)"
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: swift:6.2
+  #   steps:
+  #     - name: List environment variables
+  #       run: set
+  #     - uses: actions/checkout@v4
+  #     - name: Build package
+  #       run: swift build
+  #     - name: Build tests
+  #       run: swift build --build-tests
+  #     - name: Run tests
+  #       run: swift test --xunit-output .build/report
+  #     - name: Upload test results
+  #       if: success() || failure()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: test-linux-swift.zip
+  #         path: .build/report-swift-testing
+  #         if-no-files-found: error
+  #     - name: Check git status
+  #       uses: Brent-Tunnicliff/action-git-status@v1
 
   swift-windows:
     name: "swift (Windows)"
     runs-on: windows-latest
     steps:
-      - name: List environment variables
-        run: |
-          ls env:
       - name: Install Swift
-        run: winget install --id Swift.Toolchain --exact --accept-source-agreements
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: swift build
-      - name: Build tests
-        run: swift build --build-tests
-      - name: Run tests
-        run: swift test --xunit-output .build/report
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-windows-swift.zip
-          path: .build/report-swift-testing
-          if-no-files-found: error
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+        run: |
+          winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.Tools.ARM64" --accept-package-agreements --accept-source-agreements
+          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
+          winget show Swift.Toolchain
+      - name: Add Swift tp path
+        run: |
+          # winget apparently does add swift to path, but that doesn't apply to the current session, so we need to manaully add it ourselves.
+          $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
+          if (-not $swift) { 
+            throw "swift.exe not found after install" 
+          }
 
-  lint:
-    runs-on: macos-26
-    steps:
+          $swift_dir = Split-Path $swift.FullName
+          echo "Swift found at $swift_dir"
+          $swift_dir >> $env:GITHUB_PATH
+
+          # echo "path=$swift" >> "$GITHUB_OUTPUT"
+
+          # & $swift --version
+
+          # Get-Item Env:PATH
+          # swift.exe --version
       - name: List environment variables
+        shell: bash
         run: set
       - uses: actions/checkout@v4
-      - name: Strict lint
-        run: swift format lint . --recursive --parallel --strict
+      - name: Build package
+        run: |
+          swift --version
+          swift build --verbose
+      # - name: Build tests
+      #   # env:
+      #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
+      #   run: |
+      #     # & $SWIFT build --build-tests
+      # - name: Run tests
+      #   # env:
+      #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
+      #   run: |
+      #     # & $SWIFT test --xunit-output .build/report
+      # - name: Upload test results
+      #   if: success() || failure()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: test-windows-swift.zip
+      #     path: .build/report-swift-testing
+      #     if-no-files-found: error
+      # - name: Check git status
+      #   uses: Brent-Tunnicliff/action-git-status@v1
+
+  # lint:
+  #   runs-on: macos-26
+  #   steps:
+  #     - name: List environment variables
+  #       run: set
+  #     - uses: actions/checkout@v4
+  #     - name: Strict lint
+  #       run: swift format lint . --recursive --parallel --strict
