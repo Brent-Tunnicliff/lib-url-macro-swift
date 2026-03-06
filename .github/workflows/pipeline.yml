@@ -205,31 +205,29 @@ jobs:
           # Get-ChildItem -Path "C:\Program Files"
           # Get-ChildItem -Path "C:\Program Files (x86)"
           # Get-ChildItem -Path "C:\Packages"
-          Get-ChildItem -Path "$env:LOCALAPPDATA\Programs" -Recurse
+          # Get-ChildItem -Path "$env:LOCALAPPDATA\Programs" -Recurse
 
-      # - name: Add Swift tp path
-      #   run: |
-      #     # winget apparently does add swift to path, but that doesn't apply to the current session, so we need to manaully add it ourselves.
-      #     # $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
-      #     # if (-not $swift) { 
-      #     #   throw "swift.exe not found after install" 
-      #     # }
+      - name: Add Swift tp path
+        run: |
+          # winget apparently does add swift to path, but that doesn't apply to the current session, so we need to manaully add it ourselves.
+          $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
+          if (-not $swift) { 
+            throw "swift.exe not found after install" 
+          }
 
-      #     $swift = Get-Item -Path "C:\Program Files\Swift\usr\bin"
+          echo "Swift found '$swift'"
+          $swift_dir = Split-Path $swift.FullName
+          echo "Adding to path: '$swift_dir'"
+          $swift_dir >> $env:GITHUB_PATH
 
-      #     echo "Swift found '$swift'"
-      #     $swift_dir = Split-Path $swift.FullName
-      #     echo "Adding to path: '$swift_dir'"
-      #     $swift_dir >> $env:GITHUB_PATH
+          # echo "SDKROOT:"
+          # Get-Content $env:SDKROOT
 
-      #     echo "SDKROOT:"
-      #     Get-Content $env:SDKROOT
+          echo "GITHUB_PATH:"
+          Get-Content $env:GITHUB_PATH
 
-      #     echo "GITHUB_PATH:"
-      #     Get-Content $env:GITHUB_PATH
-
-      #     echo "Getting swift version:"
-      #     & $swift.FullName --version
+          echo "Getting swift version:"
+          & $swift --version
       # - name: List environment variables
       #   shell: bash
       #   run: set
