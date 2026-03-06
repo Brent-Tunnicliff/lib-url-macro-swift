@@ -172,52 +172,52 @@ jobs:
     # Windows 2022 image already contains the dependencies we need.
     runs-on: windows-2022
     steps:
-      - name: Install Swift
-        run: |
-          # Maybe I don't need this?
-          # Change python to 3.10.*
-          echo "Set default python to 3.10"
-          Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]", "python=3.10"
-          Get-Content -Path "$env:LOCALAPPDATA\py.ini"
+      # - name: Install Swift
+      #   run: |
+      #     # Maybe I don't need this?
+      #     # Change python to 3.10.*
+      #     echo "Set default python to 3.10"
+      #     Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]", "python=3.10"
+      #     Get-Content -Path "$env:LOCALAPPDATA\py.ini"
 
-          echo "Print python versions"
-          py --version
-          pip --version
+      #     echo "Print python versions"
+      #     py --version
+      #     pip --version
 
-          echo "Downloading swift installer..."
-          Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
+      #     echo "Downloading swift installer..."
+      #     Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
 
-          echo "Running swift installer..."
-          Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
+      #     echo "Running swift installer..."
+      #     Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
 
-          echo "Adding swift.exe to path..."
+      #     echo "Adding swift.exe to path..."
 
-          $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
-          if (-not $swift) { 
-            throw "swift.exe not found after install" 
-          }
+      #     $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
+      #     if (-not $swift) { 
+      #       throw "swift.exe not found after install" 
+      #     }
 
-          echo "Swift found '$swift'"
-          $swift_dir = Split-Path $swift.FullName
-          echo "Adding to path: '$swift_dir'"
-          $swift_dir >> $env:GITHUB_PATH
+      #     echo "Swift found '$swift'"
+      #     $swift_dir = Split-Path $swift.FullName
+      #     echo "Adding to path: '$swift_dir'"
+      #     $swift_dir >> $env:GITHUB_PATH
 
-          echo "GITHUB_PATH:"
-          Get-Content $env:GITHUB_PATH
+      #     echo "GITHUB_PATH:"
+      #     Get-Content $env:GITHUB_PATH
 
-          # echo "Getting swift version:"
-          # & $swift --version
-      - name: List swift version
-        shell: bash
-        run: swift --version
+      #     # echo "Getting swift version:"
+      #     # & $swift --version
+      - uses: SwiftyLab/setup-swift@latest
+      # - name: List swift version
+      #   shell: bash
+      #   run: swift --version
       - name: List environment variables
         shell: bash
         run: set
-      # - uses: actions/checkout@v4
-      # - name: Build package
-      #   run: |
-      #     swift --version
-      #     swift build --verbose
+      - uses: actions/checkout@v4
+      - name: Build package
+        run: |
+          swift build
       # - name: Build tests
       #   # env:
       #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
