@@ -132,25 +132,14 @@ jobs:
         run: swift build --build-tests
       - name: Run tests
         run: swift test --xunit-output .build/report
-      - run: |
-          FILE="$GITHUB_WORKSPACE/.build/report-swift-testing"
-          echo $FILE
-          if [ -f "$FILE" ]; then
-            echo "exists and is a regular file."
-          else
-            echo "does not exist or is not a regular file."
-          fi
-
-          cd .build
-          ls -la
       - name: Upload test results
         if: success() || failure()
         uses: actions/upload-artifact@v4
         env:
           FILE_NAME: "report-swift-testing"
         with:
-          name: "${FILE_NAME}.xml"
-          path: "$GITHUB_WORKSPACE/.build/$FILE_NAME"
+          name: ${{ env.FILE_NAME }}.xml
+          path: .build/${{ env.FILE_NAME }}
           if-no-files-found: error
       - name: Check git status
         uses: Brent-Tunnicliff/action-git-status@v1
