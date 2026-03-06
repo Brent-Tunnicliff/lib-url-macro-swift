@@ -172,6 +172,11 @@ jobs:
     # Windows 2022 image already contains the dependencies we need,
     runs-on: windows-2022
     steps:
+      - name: Install WinGet
+        run: |
+          Install-PackageProvider -Name NuGet -Force | Out-Null
+          Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
+          Repair-WinGetPackageManager
       - name: Install Swift
         run: |
           winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
