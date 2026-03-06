@@ -135,11 +135,9 @@ jobs:
       - name: Upload test results
         if: success() || failure()
         uses: actions/upload-artifact@v4
-        env:
-          FILE_NAME: "report-swift-testing"
         with:
-          name: "${FILE_NAME}.xml"
-          path: "$GITHUB_WORKSPACE/.build/$FILE_NAME"
+          name: test-macOS-swift.zip
+          path: .build/report-swift-testing
           if-no-files-found: error
       - name: Check git status
         uses: Brent-Tunnicliff/action-git-status@v1
