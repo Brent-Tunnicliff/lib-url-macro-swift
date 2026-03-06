@@ -28,7 +28,7 @@ jobs:
       scheme: "lib-url-macro-swift-Package"
       simulator_version: "${{ matrix.target.simulator_version }}"
       # The macro tests only run on the host machine platform.
-      skip_tests: ${{ matrix.target.platform != "macOS" }}
+      skip_tests: ${{ matrix.target.platform != 'macOS' }}
       xcode_path: "/Applications/Xcode_26.3.app"
 
   swift:
