@@ -188,20 +188,16 @@ jobs:
           echo "Swift found at $swift_dir"
           $swift_dir >> $env:GITHUB_PATH
 
-          # echo "path=$swift" >> "$GITHUB_OUTPUT"
-
-          # & $swift --version
-
-          # Get-Item Env:PATH
-          # swift.exe --version
-      - name: List environment variables
-        shell: bash
-        run: set
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: |
-          swift --version
-          swift build --verbose
+          Get-Content $env:GITHUB_PATH
+          & "$swift" --version
+      # - name: List environment variables
+      #   shell: bash
+      #   run: set
+      # - uses: actions/checkout@v4
+      # - name: Build package
+      #   run: |
+      #     swift --version
+      #     swift build --verbose
       # - name: Build tests
       #   # env:
       #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
