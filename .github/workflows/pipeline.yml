@@ -195,10 +195,15 @@ jobs:
           # python --version
           # pip --version
 
+          echo "Downloading installer"
           Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
+
+          echo "Running installer"
           Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
 
-          Get-ChildItem -Path "C:\Program Files" -Recurse
+          Get-ChildItem -Path "C:\Program Files"
+          Get-ChildItem -Path "C:"
+
       # - name: Add Swift tp path
       #   run: |
       #     # winget apparently does add swift to path, but that doesn't apply to the current session, so we need to manaully add it ourselves.
