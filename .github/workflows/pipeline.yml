@@ -190,7 +190,7 @@ jobs:
           $swift_dir >> $env:GITHUB_PATH
 
           Get-Content $env:GITHUB_PATH
-          & "$swift" --version
+          & $swift.FullName --version
       # - name: List environment variables
       #   shell: bash
       #   run: set
