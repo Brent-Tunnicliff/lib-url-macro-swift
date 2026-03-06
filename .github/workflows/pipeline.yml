@@ -173,7 +173,7 @@ jobs:
     steps:
       - name: Install Swift
         run: |
-          winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.Tools.ARM64" --accept-package-agreements --accept-source-agreements
+          # winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.Tools.ARM64" --accept-package-agreements --accept-source-agreements
           winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
           winget show Swift.Toolchain
       - name: Add Swift tp path
@@ -189,7 +189,13 @@ jobs:
           echo "Adding to path: '$swift_dir'"
           $swift_dir >> $env:GITHUB_PATH
 
+          echo "SDKROOT:"
+          Get-Content $env:SDKROOT
+
+          echo "GITHUB_PATH:"
           Get-Content $env:GITHUB_PATH
+
+          echo "Getting swift version:"
           & $swift.FullName --version
       # - name: List environment variables
       #   shell: bash
