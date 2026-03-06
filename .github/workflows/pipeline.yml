@@ -175,14 +175,12 @@ jobs:
       - name: Install Swift
         run: |
           # Maybe I don't need this?
-          # Install Python 3.10 dependancy.
-          echo "Downloading Python installer..."
-          Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe -OutFile python-installer.exe
+          # Change python to 3.10.*
+          py -0
+          py -3.10
 
-          echo "Running Python installer..."
-          Start-Process .\python-installer.exe -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Include_tcltk=1' -Wait
-
-          python --version
+          # Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]\npython=3.10"
+          py --version
           pip --version
 
           echo "Downloading swift installer..."
