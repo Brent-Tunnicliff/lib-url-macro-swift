@@ -176,8 +176,11 @@ jobs:
         run: |
           # Maybe I don't need this?
           # Change python to 3.10.*
+          echo "Set default python to 3.10"
           Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]", "python=3.10"
           Get-Content -Path "$env:LOCALAPPDATA\py.ini"
+
+          echo "Print python versions"
           py --version
           pip --version
 
