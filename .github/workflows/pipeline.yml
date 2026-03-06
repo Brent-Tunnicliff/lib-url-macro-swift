@@ -184,8 +184,9 @@ jobs:
             throw "swift.exe not found after install" 
           }
 
+          echo "Swift found '$swift'"
           $swift_dir = Split-Path $swift.FullName
-          echo "Swift found at $swift_dir"
+          echo "Adding to path: '$swift_dir'"
           $swift_dir >> $env:GITHUB_PATH
 
           Get-Content $env:GITHUB_PATH
