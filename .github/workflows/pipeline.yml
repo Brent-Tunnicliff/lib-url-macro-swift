@@ -175,12 +175,13 @@ jobs:
       - name: Install WinGet
         run: |
           Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
-          $winget = Get-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe
-          if (-not $winget) { 
-            throw "winget.exe not found after install" 
-          }
+          Repair-WinGetPackageManager -AllUsers
+          # $winget = Get-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe
+          # if (-not $winget) { 
+          #   throw "winget.exe not found after install" 
+          # }
 
-          $winget >> $env:GITHUB_PATH
+          # $winget >> $env:GITHUB_PATH
       - name: Install Swift
         run: |
           winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
