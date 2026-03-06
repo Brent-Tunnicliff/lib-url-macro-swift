@@ -118,50 +118,37 @@ jobs:
       - name: Check git status
         uses: Brent-Tunnicliff/action-git-status@v1
 
-  swift-macos:
-    name: "swift (macOS)"
-    runs-on: macos-26
+  swift:
+    strategy:
+      # Don't fail the other matrix values if one fails.
+      fail-fast: false
+      matrix:
+        platform: [
+          { name: "Linux", run_on: "ubuntu-latest" },
+          { name: "macOS", run_on: "macos-latest" },
+          { name: "Windows", run_on: "windows-latest" },
+        ]
+    runs-on: ${{ matrix.platform.run_on }}
     steps:
-      # List all environment variables to help with debugging possible issues.
+      - uses: SwiftyLab/setup-swift@latest
       - name: List environment variables
+        shell: bash
         run: set
       - uses: actions/checkout@v4
       - name: Build package
-        run: swift build
+        run: |
+          swift build
       - name: Build tests
-        run: swift build --build-tests
+        run: |
+          swift build --build-tests
       - name: Run tests
-        run: swift test --xunit-output .build/report
+        run: |
+          swift test --xunit-output .build/report
       - name: Upload test results
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-macOS-swift.zip
-          path: .build/report-swift-testing
-          if-no-files-found: error
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
-
-  swift-linux:
-    name: "swift (Linux)"
-    runs-on: ubuntu-latest
-    container:
-      image: swift:6.2
-    steps:
-      - name: List environment variables
-        run: set
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: swift build
-      - name: Build tests
-        run: swift build --build-tests
-      - name: Run tests
-        run: swift test --xunit-output .build/report
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-linux-swift.zip
+          name: test-${{ matrix.platform.name }}-swift.zip
           path: .build/report-swift-testing
           if-no-files-found: error
       - name: Check git status
