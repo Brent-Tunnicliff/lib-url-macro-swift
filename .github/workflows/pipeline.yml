@@ -169,11 +169,11 @@ jobs:
 
   swift-windows:
     name: "swift (Windows)"
-    runs-on: windows-latest
+    # Windows 2022 image already contains the dependencies we need,
+    runs-on: windows-2022
     steps:
       - name: Install Swift
         run: |
-          # winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.Tools.ARM64" --accept-package-agreements --accept-source-agreements
           winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
           winget show Swift.Toolchain
       - name: Add Swift tp path
