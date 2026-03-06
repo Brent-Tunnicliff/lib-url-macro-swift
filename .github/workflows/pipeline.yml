@@ -172,45 +172,7 @@ jobs:
     # Windows 2022 image already contains the dependencies we need.
     runs-on: windows-2022
     steps:
-      # - name: Install Swift
-      #   run: |
-      #     # Maybe I don't need this?
-      #     # Change python to 3.10.*
-      #     echo "Set default python to 3.10"
-      #     Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]", "python=3.10"
-      #     Get-Content -Path "$env:LOCALAPPDATA\py.ini"
-
-      #     echo "Print python versions"
-      #     py --version
-      #     pip --version
-
-      #     echo "Downloading swift installer..."
-      #     Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
-
-      #     echo "Running swift installer..."
-      #     Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
-
-      #     echo "Adding swift.exe to path..."
-
-      #     $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
-      #     if (-not $swift) { 
-      #       throw "swift.exe not found after install" 
-      #     }
-
-      #     echo "Swift found '$swift'"
-      #     $swift_dir = Split-Path $swift.FullName
-      #     echo "Adding to path: '$swift_dir'"
-      #     $swift_dir >> $env:GITHUB_PATH
-
-      #     echo "GITHUB_PATH:"
-      #     Get-Content $env:GITHUB_PATH
-
-      #     # echo "Getting swift version:"
-      #     # & $swift --version
       - uses: SwiftyLab/setup-swift@latest
-      # - name: List swift version
-      #   shell: bash
-      #   run: swift --version
       - name: List environment variables
         shell: bash
         run: set
@@ -218,25 +180,21 @@ jobs:
       - name: Build package
         run: |
           swift build
-      # - name: Build tests
-      #   # env:
-      #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
-      #   run: |
-      #     # & $SWIFT build --build-tests
-      # - name: Run tests
-      #   # env:
-      #   #   SWIFT: ${{ steps.swift_path.outputs.path }}
-      #   run: |
-      #     # & $SWIFT test --xunit-output .build/report
-      # - name: Upload test results
-      #   if: success() || failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: test-windows-swift.zip
-      #     path: .build/report-swift-testing
-      #     if-no-files-found: error
-      # - name: Check git status
-      #   uses: Brent-Tunnicliff/action-git-status@v1
+      - name: Build tests
+        run: |
+          swift build --build-tests
+      - name: Run tests
+        run: |
+          swift test --xunit-output .build/report
+      - name: Upload test results
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-windows-swift.zip
+          path: .build/report-swift-testing
+          if-no-files-found: error
+      - name: Check git status
+        uses: Brent-Tunnicliff/action-git-status@v1
 
   # lint:
   #   runs-on: macos-26
