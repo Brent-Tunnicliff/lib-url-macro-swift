@@ -176,7 +176,6 @@ jobs:
         run: |
           # Maybe I don't need this?
           # Change python to 3.10.*
-          py -0
           py -3.10
 
           # Set-Content -Path "$env:LOCALAPPDATA\py.ini" -Value "[defaults]\npython=3.10"
