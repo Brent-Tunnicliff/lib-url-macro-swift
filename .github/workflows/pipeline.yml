@@ -200,11 +200,12 @@ jobs:
           Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
 
           echo "Running installer..."
-          Start-Process .\swift-installer.exe -ArgumentList '/norestart' -Wait
+          Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
 
-          Get-ChildItem -Path "C:\Program Files"
-          Get-ChildItem -Path "Program Files (x86)"
-          Get-ChildItem -Path "Packages"
+          # Get-ChildItem -Path "C:\Program Files"
+          # Get-ChildItem -Path "C:\Program Files (x86)"
+          # Get-ChildItem -Path "C:\Packages"
+          Get-ChildItem -Path "$env:LOCALAPPDATA\Programs" -Recurse
 
       # - name: Add Swift tp path
       #   run: |
