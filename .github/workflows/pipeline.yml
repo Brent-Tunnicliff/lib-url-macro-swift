@@ -175,7 +175,7 @@ jobs:
         run: |
           ls env:
       - name: Install Swift
-        run: winget install --id Swift.Toolchain -e
+        run: winget install --id Swift.Toolchain --exact --accept-source-agreements
       - uses: actions/checkout@v4
       - name: Build package
         run: swift build
