@@ -172,7 +172,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: List environment variables
-        run: set
+        run: |
+          ls env:
       - name: Install Swift
         run: winget install --id Swift.Toolchain -e
       - uses: actions/checkout@v4
