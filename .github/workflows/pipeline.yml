@@ -169,47 +169,30 @@ jobs:
 
   swift-windows:
     name: "swift (Windows)"
-    # Windows 2022 image already contains the dependencies we need,
+    # Windows 2022 image already contains the dependencies we need.
     runs-on: windows-2022
     steps:
-      # - name: Install WinGet
-      #   run: |
-      #     Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
-      #     Repair-WinGetPackageManager -AllUsers
-      #     $winget = Get-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe
-      #     if (-not $winget) { 
-      #       throw "winget.exe not found after install" 
-      #     }
-
-      #     $winget >> $env:GITHUB_PATH
       - name: Install Swift
         run: |
-          # WinGet not in windows-2022
-          # winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements
-          # winget show Swift.Toolchain
-
-
           # Maybe I don't need this?
           # Install Python 3.10 dependancy.
-          # Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.13/python-3.10.13-amd64.exe -OutFile python-installer.exe
-          # Start-Process .\python-installer.exe -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Include_tcltk=1' -Wait
-          # python --version
-          # pip --version
+          echo "Downloading Python installer..."
+          Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe -OutFile python-installer.exe
 
-          echo "Downloading installer..."
+          echo "Running Python installer..."
+          Start-Process .\python-installer.exe -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Include_tcltk=1' -Wait
+
+          python --version
+          pip --version
+
+          echo "Downloading swift installer..."
           Invoke-WebRequest -Uri https://download.swift.org/swift-6.2.4-release/windows10/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE-windows10.exe -OutFile swift-installer.exe
 
-          echo "Running installer..."
+          echo "Running swift installer..."
           Start-Process .\swift-installer.exe -ArgumentList '/quiet /norestart' -Wait
 
-          # Get-ChildItem -Path "C:\Program Files"
-          # Get-ChildItem -Path "C:\Program Files (x86)"
-          # Get-ChildItem -Path "C:\Packages"
-          # Get-ChildItem -Path "$env:LOCALAPPDATA\Programs" -Recurse
+          echo "Adding swift.exe to path..."
 
-      - name: Add Swift tp path
-        run: |
-          # winget apparently does add swift to path, but that doesn't apply to the current session, so we need to manaully add it ourselves.
           $swift = Get-ChildItem -Path $env:LOCALAPPDATA\Programs\Swift\Toolchains -Filter swift.exe -Recurse -ErrorAction SilentlyContinue -Force
           if (-not $swift) { 
             throw "swift.exe not found after install" 
@@ -220,17 +203,14 @@ jobs:
           echo "Adding to path: '$swift_dir'"
           $swift_dir >> $env:GITHUB_PATH
 
-          # echo "SDKROOT:"
-          # Get-Content $env:SDKROOT
-
           echo "GITHUB_PATH:"
           Get-Content $env:GITHUB_PATH
 
           echo "Getting swift version:"
           & $swift --version
-      # - name: List environment variables
-      #   shell: bash
-      #   run: set
+      - name: List environment variables
+        shell: bash
+        run: set
       # - uses: actions/checkout@v4
       # - name: Build package
       #   run: |
