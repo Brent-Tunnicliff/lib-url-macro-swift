@@ -205,8 +205,11 @@ jobs:
           echo "GITHUB_PATH:"
           Get-Content $env:GITHUB_PATH
 
-          echo "Getting swift version:"
-          & $swift --version
+          # echo "Getting swift version:"
+          # & $swift --version
+      - name: List swift version
+        shell: bash
+        run: swift --version
       - name: List environment variables
         shell: bash
         run: set
