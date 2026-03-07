@@ -6,14 +6,10 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  PACKAGE_SCHEME: "lib-url-macro-swift-Package"
-
 jobs:
   xcodebuild:
-    runs-on: macos-26
     strategy:
-      # Don't fail the other matrix values if one fails.
+      # Don't cancel the other matrix values if one fails.
       fail-fast: false
       matrix:
         target: [
@@ -25,140 +21,31 @@ jobs:
           # macOS runs on the host and doesn't need a simulator.
           { platform: "macOS", simulator_version: "" }
         ]
-    steps:
-      # ---------------------------
-      # Setup
-      # ---------------------------
-
-      - name: Setup pipeline
-        id: setup
-        uses: Brent-Tunnicliff/action-setup-apple@v1
-        with:
-          platform: "${{ matrix.target.platform }}"
-          simulator_version: "${{ matrix.target.simulator_version }}"
-          xcode_path: "/Applications/Xcode_26.3.app"
-
-      - name: Configure if tests can be run
-        id: configure_if_tests_can_run
-        env:
-          PLATFORM: ${{ matrix.target.platform }}
-        run: |
-          if [[ $PLATFORM == "macOS" ]]; then
-            CAN_TESTS_RUN="true"
-          else
-            CAN_TESTS_RUN="false"
-          fi
-
-          echo "can_tests_run: $CAN_TESTS_RUN"
-          echo "can_tests_run=$CAN_TESTS_RUN" >> "$GITHUB_OUTPUT"
-
-      # ---------------------------
-      # Build and test package
-      # ---------------------------
-
-      - name: Build package debug
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -configuration "Debug"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
-
-      - name: Build package tests
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build-for-testing
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
-
-      - name: Run package tests
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' }}
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-          RESULTS_BUNDLE_PATH: ${{ steps.setup.outputs.test_results_path }}
-        run: xcodebuild test-without-building
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -resultBundlePath "$RESULTS_BUNDLE_PATH"
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
-
-      - name: Upload test results
-        if: ${{ steps.configure_if_tests_can_run.outputs.can_tests_run == 'true' && (success() || failure()) }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ steps.setup.outputs.test_results_file_name }}"
-          path: "${{ steps.setup.outputs.test_results_path }}"
-          if-no-files-found: error
-
-      # Lets make sure it also builds in release configuration in case there are conditionals.
-      - name: Build package release
-        env:
-          DESTINATION: ${{ steps.setup.outputs.destination }}
-        run: xcodebuild build
-          -scheme "$PACKAGE_SCHEME"
-          -destination "$DESTINATION"
-          -configuration "Release"
-          -skipPackagePluginValidation
-          CODE_SIGN_IDENTITY=""
-          CODE_SIGNING_REQUIRED=NO
-
-      # ---------------------------
-      # Final checks
-      # ---------------------------
-
-      # Make sure there are no local changes as any auto generated changes must be checked into git.
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+    uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/xcodebuild.yml@v2
+    with:
+      platform: "${{ matrix.target.platform }}"
+      runs_on: "macos-26"
+      scheme: "lib-url-macro-swift-Package"
+      simulator_version: "${{ matrix.target.simulator_version }}"
+      # The macro tests only run on the host machine platform.
+      skip_tests: ${{ matrix.target.platform != 'macOS' }}
+      xcode_path: "/Applications/Xcode_26.3.app"
 
   swift:
     strategy:
-      # Don't fail the other matrix values if one fails.
+      # Don't cancel the other matrix values if one fails.
       fail-fast: false
       matrix:
-        platform: [
-          { name: "Linux", run_on: "ubuntu-latest" },
-          { name: "macOS", run_on: "macos-latest" },
-          { name: "Windows", run_on: "windows-latest" },
+        run_on: [
+          "ubuntu-latest",
+          "macos-latest",
+          "windows-latest",
         ]
-    runs-on: ${{ matrix.platform.run_on }}
-    steps:
-      - uses: SwiftyLab/setup-swift@latest
-      - name: List environment variables
-        shell: bash
-        run: set
-      - uses: actions/checkout@v4
-      - name: Build package
-        run: |
-          swift build
-      - name: Build tests
-        run: |
-          swift build --build-tests
-      - name: Run tests
-        run: |
-          swift test --xunit-output .build/report
-      - name: Upload test results
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-${{ matrix.platform.name }}-swift.zip
-          path: .build/report-swift-testing
-          if-no-files-found: error
-      - name: Check git status
-        uses: Brent-Tunnicliff/action-git-status@v1
+    uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/swift.yml@v2
+    with:
+      runs_on: "${{ matrix.run_on }}"
 
   lint:
-    runs-on: macos-26
-    steps:
-      - name: List environment variables
-        run: set
-      - uses: actions/checkout@v4
-      - name: Strict lint
-        run: swift format lint . --recursive --parallel --strict
+    uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/lint.yml@v2
+    with:
+      runs_on: "macos-26"
