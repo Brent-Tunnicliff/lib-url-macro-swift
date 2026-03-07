@@ -68,10 +68,6 @@ jobs:
         uses: Brent-Tunnicliff/action-git-status@v1
 
   lint:
-    runs-on: macos-26
-    steps:
-      - name: List environment variables
-        run: set
-      - uses: actions/checkout@v4
-      - name: Strict lint
-        run: swift format lint . --recursive --parallel --strict
+    uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/lint.yml@path_to_v2
+    with:
+      runs_on: "macos-26"
