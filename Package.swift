@@ -1,4 +1,4 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
@@ -8,44 +8,53 @@ import PackageDescription
 // MARK: - Package
 
 let package = Package(
-    name: "lib-url-macro-swift",
+    name: "foundation-helpers",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v12),
-        .tvOS(.v13),
-        .watchOS(.v6),
-        .macCatalyst(.v13),
+        .macOS(.v10_15)
     ],
     products: [
         .library(
-            name: "URLMacro",
-            targets: ["URLMacro"]
+            name: "URLHelpers",
+            targets: ["URLHelpers"]
         )
     ],
     dependencies: [
         .package(url: "https://github.com/Brent-Tunnicliff/swift-format-plugin", .upToNextMajor(from: "2.0.0")),
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "602.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "603.0.0"),
     ],
     targets: [
+        .target(name: "CommonMacroHelpers"),
         .macro(
-            name: "URLMacroModule",
+            name: "MacroModule",
             dependencies: [
+                "CommonMacroHelpers",
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             ]
         ),
-        .target(
-            name: "URLMacro",
-            dependencies: ["URLMacroModule"]
-        ),
         .testTarget(
-            name: "URLMacroTests",
+            name: "MacroModuleTests",
             dependencies: [
-                "URLMacroModule",
+                "CommonMacroHelpers",
+                "MacroModule",
                 .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
+            ]
+        ),
+        .target(
+            name: "URLHelpers",
+            dependencies: [
+                "CommonMacroHelpers",
+                "MacroModule",
+            ]
+        ),
+        .testTarget(
+            name: "URLHelpersTests",
+            dependencies: [
+                "CommonMacroHelpers",
+                "URLHelpers",
             ]
         ),
     ]
@@ -67,10 +76,6 @@ for target in package.targets where target.type != .plugin {
     // MARK: Swift compliler settings
 
     let commonSwiftSettings: [PackageDescription.SwiftSetting] = [
-        // Optional: Set defaultIsolation to `MainActor` if desired.
-        // Probably only useful in a UI heavy package.
-        // .defaultIsolation(MainActor.self),
-
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InferIsolatedConformances"),
         .enableUpcomingFeature("InternalImportsByDefault"),

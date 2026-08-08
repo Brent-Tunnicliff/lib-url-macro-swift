@@ -1,18 +1,32 @@
-# lib-url-macro-swift
+# foundation-helpers
 
-Very simple package that contains the `#url` macro for creating a URL type from StaticString.
+Contains various helpers for Foundation (& FoundationEssential) types.
 
-If the input is not a valid url then throws a compile error.
+## URLHelpers
 
-This way we can create base urls from StaticString without having to worry about optionals or runtime errors.
+Convenient helpers for the URL type.   
+
+### #url macro
+
+Freestanding macro that checks if the input string literal is a valid URL.
+
+If the input is valid, then returns the URL type removing the need for handling optional.
+
+If the input is not a valid URL, then a compile error is thrown.
 
 Example use:
 
 ```swift
-let url: URL = #url("https://www.google.com")
+let url: URL = #url("https://www.tunnicliff.dev")
 ```
 
-Solution copied from [Swift by Sundell: Modern URL construction in Swift](https://www.swiftbysundell.com/articles/modern-url-construction-in-swift/)
+Can be useful as a base url that gets referenced in other values:
+
+```swift
+let baseUrl: URL = #url("https://www.tunnicliff.dev")
+let deviceEndpoint: URL = baseUrl.appending(path: "device")
+let userEndpoint: URL = baseUrl.appending(path: "user")
+```
 
 ## Source Stability
 
@@ -22,5 +36,6 @@ We'd like this package to quickly embrace Swift language and toolchain improveme
 
 ## Disclaimer
 
-This project is open source and open to anyone to use as they see fit.
-But I am building this with myself as the main target audience, so this will not be published anywhere.
+I only ever pretend to know what I am doing. If you find something wrong please raise an issue to let me know.
+
+This project is open source and open to anyone to use as they see fit, but I am building this with myself as the main target audience.

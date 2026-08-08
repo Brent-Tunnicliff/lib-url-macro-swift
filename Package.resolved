@@ -1,13 +1,13 @@
 {
-  "originHash" : "218d6739ce1f3780e911c7bdb28f9ee6da5ec1585c07a0bf19c9ec690fd661e7",
+  "originHash" : "e9467938c2dc1430c8240af342cc2de34dac65e14b0caf1925c98e73dbe04d7c",
   "pins" : [
     {
       "identity" : "swift-format-plugin",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brent-Tunnicliff/swift-format-plugin",
       "state" : {
-        "revision" : "4783d8fefdc95e7ee7edde17ae505cc871be6e85",
-        "version" : "2.0.2"
+        "revision" : "d2ffb7228c500d29c99047f0b285a20d6b270312",
+        "version" : "2.0.3"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
-        "version" : "602.0.0"
+        "revision" : "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+        "version" : "603.0.2"
       }
     }
   ],

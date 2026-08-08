@@ -17,8 +17,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "URLMacroTests",
-        "name" : "URLMacroTests"
+        "identifier" : "MacroModuleTests",
+        "name" : "MacroModuleTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "URLHelpersTests",
+        "name" : "URLHelpersTests"
       }
     }
   ],

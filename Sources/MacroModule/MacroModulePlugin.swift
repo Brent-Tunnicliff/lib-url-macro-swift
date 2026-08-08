@@ -4,6 +4,6 @@ import SwiftCompilerPlugin
 import SwiftSyntaxMacros
 
 @main
-struct URLMacroPlugin: CompilerPlugin {
+struct MacroModulePlugin: CompilerPlugin {
     let providingMacros: [any Macro.Type] = [URLMacro.self]
 }
