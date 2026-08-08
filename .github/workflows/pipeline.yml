@@ -4,7 +4,13 @@ name: Pipeline
 
 on:
   push:
+    paths:
+      - '**.resolved'
+      - '**.swift'
+      - '**/pipeline.yml'
   workflow_dispatch:
+
+permissions: {}
 
 jobs:
   xcodebuild:
@@ -13,10 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { platform: "iOS", simulator_version: "26.2" },
-          { platform: "tvOS", simulator_version: "26.2" },
-          { platform: "watchOS", simulator_version: "26.2" },
-          { platform: "visionOS", simulator_version: "26.2" },
+          { platform: "iOS", simulator_version: "26" },
+          { platform: "tvOS", simulator_version: "26" },
+          { platform: "watchOS", simulator_version: "26" },
+          { platform: "visionOS", simulator_version: "26" },
 
           # macOS runs on the host and doesn't need a simulator.
           { platform: "macOS", simulator_version: "" }
@@ -25,11 +31,9 @@ jobs:
     with:
       platform: "${{ matrix.target.platform }}"
       runs_on: "macos-26"
-      scheme: "lib-url-macro-swift-Package"
+      scheme: "foundation-helpers"
       simulator_version: "${{ matrix.target.simulator_version }}"
-      # The macro tests only run on the host machine platform.
-      skip_tests: ${{ matrix.target.platform != 'macOS' }}
-      xcode_path: "/Applications/Xcode_26.3.app"
+      xcode_path: "/Applications/Xcode_26.6.app"
 
   swift:
     strategy:
@@ -44,6 +48,25 @@ jobs:
     uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/swift.yml@v2
     with:
       runs_on: "${{ matrix.run_on }}"
+
+  swift_sdks:
+    strategy:
+      # Don't cancel the other matrix values if one fails.
+      fail-fast: false
+      matrix:
+        platform: ["android", "wasm"]
+        swift_version: ["6.3.3"]
+    uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/swift.yml@v2
+    name: "swift (${{ matrix.platform }})"
+    with:
+      # A bug with wasm means that we cannot run tests if exporting a report, so better to run tests with no report.
+      generate_test_report: ${{ matrix.platform != 'wasm' }}
+      runs_on: "ubuntu-latest"
+      sdks: "${{ matrix.platform }}"
+      # Android requires building and deploying the tests bundle to an emulator to test, so just skipping.
+      skip_tests: ${{ matrix.platform == 'android' }}
+      swift_sdk: "swift-${{ matrix.swift_version }}-RELEASE_${{ matrix.platform }}"
+      swift_version: "${{ matrix.swift_version }}"
 
   lint:
     uses: Brent-Tunnicliff/workflow-common-apple/.github/workflows/lint.yml@v2
