@@ -28,22 +28,7 @@ public struct URLMacro: ExpressionMacro {
 
     private static func foundationModuleName(of node: some FreestandingMacroExpansionSyntax) throws -> ExprSyntax? {
         // If no module set, then return nil.
-        guard let argument = node.arguments[safe: 1]?.expression else {
-            return nil
-        }
-
-        guard let member = argument.as(MemberAccessExprSyntax.self) else {
-            throw Error.moduleNotLiteral
-        }
-
-        let moduleName = member.declName.baseName.text
-
-        // If an invalid module is set, then throw error.
-        guard let module = Module(rawValue: moduleName) else {
-            throw Error.moduleInvalid(moduleName)
-        }
-
-        guard let name = module.name else {
+        guard let name = try node.arguments[safe: 1]?.module?.name else {
             return nil
         }
 
@@ -71,8 +56,6 @@ public struct URLMacro: ExpressionMacro {
 
 extension URLMacro {
     enum Error: Swift.Error {
-        case moduleInvalid(String)
-        case moduleNotLiteral
         case urlInvalid(String)
         case urlNotStringLiteral
     }
@@ -81,8 +64,6 @@ extension URLMacro {
 extension URLMacro.Error: CustomStringConvertible {
     var description: String {
         switch self {
-        case let .moduleInvalid(value): "'\(value)' is not a valid module case"
-        case .moduleNotLiteral: "Module not a literal expression, passing in a runtime value is not supported"
         case .urlNotStringLiteral: "URL argument is not a string literal"
         case let .urlInvalid(value): "'\(value)' is not a valid URL"
         }
