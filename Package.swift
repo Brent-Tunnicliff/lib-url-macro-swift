@@ -61,6 +61,20 @@ let package = Package(
                 "URLHelpers",
             ]
         ),
+        .target(
+            name: "UUIDHelpers",
+            dependencies: [
+                "CommonMacroHelpers",
+                "MacroModule",
+            ]
+        ),
+        .testTarget(
+            name: "UUIDHelpersTests",
+            dependencies: [
+                "CommonMacroHelpers",
+                "UUIDHelpers",
+            ]
+        ),
     ]
 )
 

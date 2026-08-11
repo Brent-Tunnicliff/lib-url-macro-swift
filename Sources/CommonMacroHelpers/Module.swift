@@ -72,17 +72,6 @@ extension Module: CustomDebugStringConvertible {
 extension Module: Hashable {}
 extension Module.Value: Hashable {}
 
-// MARK: - Identifiable
-
-extension Module: Identifiable {
-    /// The stable identity of the entity associated with this instance.
-    public var id: String { value.id }
-}
-
-extension Module.Value: Identifiable {
-    var id: String { rawValue }
-}
-
 // MARK: - RawRepresentable
 
 extension Module: RawRepresentable {

@@ -8,14 +8,14 @@ public import CommonMacroHelpers
     public import Foundation
 #endif
 
-/// Macro for checking if url is valid at compile time and removing the usual optional.
+/// Macro for checking if uuid string is valid at compile time and removing the usual optional.
 ///
 /// - Parameters:
-///    - value: String literal to be used for creating the url. If not a valid url then a compile error is thrown.
+///    - value: String literal to be used for creating the uuid. If not a valid uuid then a compile error is thrown.
 ///    - module: Module to hard code in the generated code. By default it will not add the module meaning conflicting with local symbols is possible.
 ///    This must be a literal reference to the value, passing in a runtime value will throw a compile error.
 @freestanding(expression)
-public macro url(
+public macro uuid(
     _ value: StaticString,
     module: Module = .none
-) -> URL = #externalMacro(module: "MacroModule", type: "URLMacro")
+) -> UUID = #externalMacro(module: "MacroModule", type: "UUIDMacro")
