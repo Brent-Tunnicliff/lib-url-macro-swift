@@ -11,6 +11,7 @@ struct TestUserDefaultsTests {
     }
 
     @Test
+    @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     func dataDeletedOnDeinit() async throws {
         let suiteName = "dataDeletedOnDeinit_\(UUID().uuidString)"
         let createUserDefaults = {
@@ -24,9 +25,12 @@ struct TestUserDefaultsTests {
         userDefaults = nil
 
         // Create it again and assume it cleared the data on deinit.
-        try await waitFor(timeoutTimeInterval: .testTimeout) {
-            let userDefaults = try? createUserDefaults()
-            return userDefaults?.value(forKey: key) == nil
+        try await waitFor {
+            guard let userDefaults = try? createUserDefaults() else {
+                return false
+            }
+
+            return userDefaults.object(forKey: key) == nil
         }
     }
 }
