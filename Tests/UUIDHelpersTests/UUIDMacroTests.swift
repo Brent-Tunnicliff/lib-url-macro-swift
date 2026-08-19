@@ -14,14 +14,20 @@ import UUIDHelpers
     private let skipFoundationEssentials = true
 #endif
 
+/// Macros only work with literal inputs, so the string input needs to be duplicated across each test.
 struct UUIDMacroTests {
     let expectedResult = UUID(
         uuid: (0x44, 0xb6, 0x59, 0x15, 0xae, 0x88, 0x4a, 0x01, 0xb3, 0xe7, 0x97, 0x6e, 0x98, 0xa8, 0x0d, 0x2d)
     )
 
     @Test
-    func uuid() {
+    func uuidLowercase() {
         #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d") == expectedResult)
+    }
+
+    @Test
+    func uuidUppercase() {
+        #expect(#uuid("44B65915-AE88-4A01-B3E7-976E98A80D2D") == expectedResult)
     }
 
     @Test

@@ -17,6 +17,13 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "ConcurrencyHelpersTests",
+        "name" : "ConcurrencyHelpersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "MacroModuleTests",
         "name" : "MacroModuleTests"
       }
@@ -24,8 +31,29 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "TestingHelpersTests",
+        "name" : "TestingHelpersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "URLHelpersTests",
         "name" : "URLHelpersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UserDefaultsHelpersTests",
+        "name" : "UserDefaultsHelpersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UUIDHelpersTests",
+        "name" : "UUIDHelpersTests"
       }
     }
   ],

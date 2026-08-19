@@ -15,9 +15,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FoundationHelpers"
-               BuildableName = "FoundationHelpers"
-               BlueprintName = "FoundationHelpers"
+               BlueprintIdentifier = "ConcurrencyHelpers"
+               BuildableName = "ConcurrencyHelpers"
+               BlueprintName = "ConcurrencyHelpers"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TestingHelpers"
+               BuildableName = "TestingHelpers"
+               BlueprintName = "TestingHelpers"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,6 +49,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserDefaultsHelpers"
+               BuildableName = "UserDefaultsHelpers"
+               BlueprintName = "UserDefaultsHelpers"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UUIDHelpers"
+               BuildableName = "UUIDHelpers"
+               BlueprintName = "UUIDHelpers"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -48,28 +90,6 @@
             default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "URLHelpersTests"
-               BuildableName = "URLHelpersTests"
-               BlueprintName = "URLHelpersTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UUIDHelpersTests"
-               BuildableName = "UUIDHelpersTests"
-               BlueprintName = "UUIDHelpersTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -91,9 +111,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FoundationHelpers"
-            BuildableName = "FoundationHelpers"
-            BlueprintName = "FoundationHelpers"
+            BlueprintIdentifier = "URLHelpers"
+            BuildableName = "URLHelpers"
+            BlueprintName = "URLHelpers"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

@@ -5,6 +5,16 @@
 import CompilerPluginSupport
 import PackageDescription
 
+let nonDarwinDependencyCondition = TargetDependencyCondition.when(
+    platforms: [
+        .android,
+        .linux,
+        .openbsd,
+        .wasi,
+        .windows,
+    ]
+)
+
 // MARK: - Package
 
 let package = Package(
@@ -17,17 +27,48 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "ConcurrencyHelpers",
+            targets: ["ConcurrencyHelpers"]
+        ),
+        .library(
+            name: "TestingHelpers",
+            targets: ["TestingHelpers"]
+        ),
+        .library(
             name: "URLHelpers",
             targets: ["URLHelpers"]
-        )
+        ),
+        .library(
+            name: "UserDefaultsHelpers",
+            targets: ["UserDefaultsHelpers"]
+        ),
+        .library(
+            name: "UUIDHelpers",
+            targets: ["UUIDHelpers"]
+        ),
     ],
     dependencies: [
+        .package(url: "https://github.com/apple/swift-nio", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/Brent-Tunnicliff/swift-format-plugin", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "603.0.0"),
     ],
     targets: [
         .target(name: "CommonMacroHelpers"),
+
+        .target(
+            name: "ConcurrencyHelpers",
+            dependencies: [
+                .product(name: "NIOConcurrencyHelpers", package: "swift-nio", condition: nonDarwinDependencyCondition)
+            ]
+        ),
+        .testTarget(
+            name: "ConcurrencyHelpersTests",
+            dependencies: [
+                "ConcurrencyHelpers"
+            ]
+        ),
+
         .macro(
             name: "MacroModule",
             dependencies: [
@@ -47,6 +88,20 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
             ]
         ),
+
+        .target(
+            name: "TestingHelpers",
+            dependencies: [
+                "ConcurrencyHelpers"
+            ]
+        ),
+        .testTarget(
+            name: "TestingHelpersTests",
+            dependencies: [
+                "TestingHelpers"
+            ]
+        ),
+
         .target(
             name: "URLHelpers",
             dependencies: [
@@ -61,6 +116,16 @@ let package = Package(
                 "URLHelpers",
             ]
         ),
+
+        .target(name: "UserDefaultsHelpers"),
+        .testTarget(
+            name: "UserDefaultsHelpersTests",
+            dependencies: [
+                "TestingHelpers",
+                "UserDefaultsHelpers",
+            ]
+        ),
+
         .target(
             name: "UUIDHelpers",
             dependencies: [

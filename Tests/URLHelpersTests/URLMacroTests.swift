@@ -14,6 +14,7 @@ import URLHelpers
     private let skipFoundationEssentials = true
 #endif
 
+/// Macros only work with literal inputs, so the string input needs to be duplicated across each test.
 struct URLMacroTests {
     let expectedResult: URL
 

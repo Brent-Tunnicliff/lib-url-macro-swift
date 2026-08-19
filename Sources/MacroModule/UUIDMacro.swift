@@ -39,7 +39,20 @@ public struct UUIDMacro: ExpressionMacro {
             throw CommonError.argumentInvalid(value: text, name: "UUID")
         }
 
-        // Force unwrapping should be safe because the build would have failed if this returned nil.
-        return "UUID(uuidString: \(argument))!"
+        let characters = Array(text.replacingOccurrences(of: "-", with: "").lowercased())
+
+        let bytes = stride(from: 0, to: characters.count, by: 2)
+            .map { idx -> String in
+                let end = min(idx + 2, text.count)
+                return "0x\(String(characters[idx..<end]))"
+            }
+
+        guard bytes.count == 16 else {
+            throw CommonError.argumentInvalid(value: text, name: "UUID")
+        }
+
+        let uuid = "(\(bytes.joined(separator: ", ")))"
+
+        return "UUID(uuid: \(raw: uuid))"
     }
 }
