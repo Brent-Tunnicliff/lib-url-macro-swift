@@ -39,7 +39,7 @@ public struct UUIDMacro: ExpressionMacro {
             throw CommonError.argumentInvalid(value: text, name: "UUID")
         }
 
-        let characters = Array(text.replacingOccurrences(of: "-", with: "").lowercased())
+        let characters = Array(text.lowercased().filter { $0 != "-" })
 
         let bytes = stride(from: 0, to: characters.count, by: 2)
             .map { idx -> String in
