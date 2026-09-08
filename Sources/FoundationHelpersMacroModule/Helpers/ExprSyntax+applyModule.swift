@@ -1,6 +1,5 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
-import CommonMacroHelpers
 import SwiftSyntax
 import SwiftSyntaxBuilder
 

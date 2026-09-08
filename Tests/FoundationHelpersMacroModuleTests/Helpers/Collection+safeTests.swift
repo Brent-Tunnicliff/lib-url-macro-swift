@@ -2,8 +2,8 @@
 
 import Testing
 
-#if canImport(MacroModule)
-    @testable import MacroModule
+#if canImport(FoundationHelpersMacroModule)
+    @testable import FoundationHelpersMacroModule
     private let canTestMacros = true
 #else
     private let canTestMacros = true
@@ -15,7 +15,7 @@ struct CollectionSafeTests {
 
     @Test(.disabled(if: !canTestMacros))
     func subscriptSafeIndexInt() {
-        #if canImport(MacroModule)
+        #if canImport(FoundationHelpersMacroModule)
             #expect(collection[safe: -1] == nil)
 
             for index in 0..<9 {

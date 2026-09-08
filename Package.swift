@@ -56,8 +56,6 @@ let package = Package(
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "603.0.0"..<"604.0.0"),
     ],
     targets: [
-        .target(name: "CommonMacroHelpers"),
-
         .target(
             name: "ConcurrencyHelpers",
             dependencies: [
@@ -72,9 +70,8 @@ let package = Package(
         ),
 
         .macro(
-            name: "MacroModule",
+            name: "FoundationHelpersMacroModule",
             dependencies: [
-                "CommonMacroHelpers",
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
@@ -82,10 +79,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "MacroModuleTests",
+            name: "FoundationHelpersMacroModuleTests",
             dependencies: [
-                "CommonMacroHelpers",
-                "MacroModule",
+                "FoundationHelpersMacroModule",
                 .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
             ]
@@ -107,15 +103,13 @@ let package = Package(
         .target(
             name: "URLHelpers",
             dependencies: [
-                "CommonMacroHelpers",
-                "MacroModule",
+                "FoundationHelpersMacroModule"
             ]
         ),
         .testTarget(
             name: "URLHelpersTests",
             dependencies: [
-                "CommonMacroHelpers",
-                "URLHelpers",
+                "URLHelpers"
             ]
         ),
 
@@ -131,15 +125,13 @@ let package = Package(
         .target(
             name: "UUIDHelpers",
             dependencies: [
-                "CommonMacroHelpers",
-                "MacroModule",
+                "FoundationHelpersMacroModule"
             ]
         ),
         .testTarget(
             name: "UUIDHelpersTests",
             dependencies: [
-                "CommonMacroHelpers",
-                "UUIDHelpers",
+                "UUIDHelpers"
             ]
         ),
     ]

@@ -1,9 +1,10 @@
-import CommonMacroHelpers
+// Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
+
 import SwiftSyntaxMacroExpansion
 import Testing
 
-#if canImport(MacroModule)
-    import MacroModule
+#if canImport(FoundationHelpersMacroModule)
+    @testable import FoundationHelpersMacroModule
     private let testMacros: [String: MacroSpec] = ["url": MacroSpec(type: URLMacro.self)]
 #else
     private let testMacros: [String: MacroSpec] = [:]
