@@ -102,7 +102,7 @@ struct UserDefaultTests {
                     continuation.finish()
                 }
 
-                Task {
+                _ = Task {
                     try await Task.sleep(for: .seconds(1))
                     continuation.finish(throwing: TestTimeoutError())
                 }
