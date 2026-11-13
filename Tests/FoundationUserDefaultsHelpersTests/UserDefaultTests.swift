@@ -1,9 +1,9 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
 import Foundation
+import FoundationTestingHelpers
+import FoundationUserDefaultsHelpers
 import Testing
-import TestingHelpers
-import UserDefaultsHelpers
 
 extension Trait where Self == ConditionTrait {
     static var disabledIfCannotImportSwiftUI: Self {

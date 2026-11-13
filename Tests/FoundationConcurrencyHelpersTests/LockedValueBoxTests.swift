@@ -2,7 +2,7 @@
 
 import Foundation
 import Testing
-@testable import ConcurrencyHelpers
+@testable import FoundationConcurrencyHelpers
 
 struct LockedValueBoxTests {
     // Test that a large number of concurrent access to locked box does not

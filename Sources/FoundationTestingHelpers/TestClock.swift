@@ -1,6 +1,6 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
-import ConcurrencyHelpers
+import FoundationConcurrencyHelpers
 
 @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
 extension Clock where Self == TestClock {

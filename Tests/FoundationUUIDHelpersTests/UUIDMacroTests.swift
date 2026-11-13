@@ -1,7 +1,7 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
+import FoundationUUIDHelpers
 import Testing
-import URLHelpers
 
 #if canImport(FoundationEssentials)
     import FoundationEssentials
@@ -14,36 +14,39 @@ import URLHelpers
 #endif
 
 /// Macros only work with literal inputs, so the string input needs to be duplicated across each test.
-struct URLMacroTests {
-    let expectedResult: URL
+struct UUIDMacroTests {
+    let expectedResult = UUID(
+        uuid: (0x44, 0xb6, 0x59, 0x15, 0xae, 0x88, 0x4a, 0x01, 0xb3, 0xe7, 0x97, 0x6e, 0x98, 0xa8, 0x0d, 0x2d)
+    )
 
-    init() throws {
-        self.expectedResult = try #require(URL(string: "www.tunnicliff.dev"))
+    @Test
+    func uuidLowercase() {
+        #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d") == expectedResult)
     }
 
     @Test
-    func url() {
-        #expect(#url("www.tunnicliff.dev") == expectedResult)
+    func uuidUppercase() {
+        #expect(#uuid("44B65915-AE88-4A01-B3E7-976E98A80D2D") == expectedResult)
     }
 
     @Test
-    func urlModuleNone() {
-        #expect(#url("www.tunnicliff.dev", module: .none) == expectedResult)
+    func uuidModuleNone() {
+        #expect(#uuid("44B65915-AE88-4A01-B3E7-976E98A80D2D", module: .none) == expectedResult)
     }
 
     @Test(.disabled(if: skipFoundation))
-    func urlModuleFoundation() {
+    func uuidModuleFoundation() {
         #if canImport(FoundationEssentials)
             Issue.record("Foundation not imported")
         #else
-            #expect(#url("www.tunnicliff.dev", module: .foundation) == expectedResult)
+            #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d", module: .foundation) == expectedResult)
         #endif
     }
 
     @Test(.disabled(if: skipFoundationEssentials))
-    func urlModuleFoundationEssentials() {
+    func uuidModuleFoundationEssentials() {
         #if canImport(FoundationEssentials)
-            #expect(#url("www.tunnicliff.dev", module: .foundationEssentials) == expectedResult)
+            #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d", module: .foundationEssentials) == expectedResult)
         #else
             Issue.record("FoundationEssentials not imported")
         #endif

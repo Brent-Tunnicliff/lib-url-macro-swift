@@ -2,7 +2,7 @@
 
 import Foundation
 import Testing
-@testable import TestingHelpers
+@testable import FoundationTestingHelpers
 
 struct TestUserDefaultsTests {
     @Test

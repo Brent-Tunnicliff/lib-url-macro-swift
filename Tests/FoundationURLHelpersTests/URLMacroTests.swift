@@ -1,7 +1,7 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
+import FoundationURLHelpers
 import Testing
-import UUIDHelpers
 
 #if canImport(FoundationEssentials)
     import FoundationEssentials
@@ -14,39 +14,36 @@ import UUIDHelpers
 #endif
 
 /// Macros only work with literal inputs, so the string input needs to be duplicated across each test.
-struct UUIDMacroTests {
-    let expectedResult = UUID(
-        uuid: (0x44, 0xb6, 0x59, 0x15, 0xae, 0x88, 0x4a, 0x01, 0xb3, 0xe7, 0x97, 0x6e, 0x98, 0xa8, 0x0d, 0x2d)
-    )
+struct URLMacroTests {
+    let expectedResult: URL
 
-    @Test
-    func uuidLowercase() {
-        #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d") == expectedResult)
+    init() throws {
+        self.expectedResult = try #require(URL(string: "www.tunnicliff.dev"))
     }
 
     @Test
-    func uuidUppercase() {
-        #expect(#uuid("44B65915-AE88-4A01-B3E7-976E98A80D2D") == expectedResult)
+    func url() {
+        #expect(#url("www.tunnicliff.dev") == expectedResult)
     }
 
     @Test
-    func uuidModuleNone() {
-        #expect(#uuid("44B65915-AE88-4A01-B3E7-976E98A80D2D", module: .none) == expectedResult)
+    func urlModuleNone() {
+        #expect(#url("www.tunnicliff.dev", module: .none) == expectedResult)
     }
 
     @Test(.disabled(if: skipFoundation))
-    func uuidModuleFoundation() {
+    func urlModuleFoundation() {
         #if canImport(FoundationEssentials)
             Issue.record("Foundation not imported")
         #else
-            #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d", module: .foundation) == expectedResult)
+            #expect(#url("www.tunnicliff.dev", module: .foundation) == expectedResult)
         #endif
     }
 
     @Test(.disabled(if: skipFoundationEssentials))
-    func uuidModuleFoundationEssentials() {
+    func urlModuleFoundationEssentials() {
         #if canImport(FoundationEssentials)
-            #expect(#uuid("44b65915-ae88-4a01-b3e7-976e98a80d2d", module: .foundationEssentials) == expectedResult)
+            #expect(#url("www.tunnicliff.dev", module: .foundationEssentials) == expectedResult)
         #else
             Issue.record("FoundationEssentials not imported")
         #endif

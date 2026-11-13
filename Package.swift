@@ -27,24 +27,24 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ConcurrencyHelpers",
-            targets: ["ConcurrencyHelpers"]
+            name: "FoundationConcurrencyHelpers",
+            targets: ["FoundationConcurrencyHelpers"]
         ),
         .library(
-            name: "TestingHelpers",
-            targets: ["TestingHelpers"]
+            name: "FoundationTestingHelpers",
+            targets: ["FoundationTestingHelpers"]
         ),
         .library(
-            name: "URLHelpers",
-            targets: ["URLHelpers"]
+            name: "FoundationURLHelpers",
+            targets: ["FoundationURLHelpers"]
         ),
         .library(
-            name: "UserDefaultsHelpers",
-            targets: ["UserDefaultsHelpers"]
+            name: "FoundationUserDefaultsHelpers",
+            targets: ["FoundationUserDefaultsHelpers"]
         ),
         .library(
-            name: "UUIDHelpers",
-            targets: ["UUIDHelpers"]
+            name: "FoundationUUIDHelpers",
+            targets: ["FoundationUUIDHelpers"]
         ),
     ],
     dependencies: [
@@ -57,15 +57,15 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ConcurrencyHelpers",
+            name: "FoundationConcurrencyHelpers",
             dependencies: [
                 .product(name: "NIOConcurrencyHelpers", package: "swift-nio", condition: nonDarwinDependencyCondition)
             ]
         ),
         .testTarget(
-            name: "ConcurrencyHelpersTests",
+            name: "FoundationConcurrencyHelpersTests",
             dependencies: [
-                "ConcurrencyHelpers"
+                "FoundationConcurrencyHelpers"
             ]
         ),
 
@@ -88,50 +88,50 @@ let package = Package(
         ),
 
         .target(
-            name: "TestingHelpers",
+            name: "FoundationTestingHelpers",
             dependencies: [
-                "ConcurrencyHelpers"
+                "FoundationConcurrencyHelpers"
             ]
         ),
         .testTarget(
-            name: "TestingHelpersTests",
+            name: "FoundationTestingHelpersTests",
             dependencies: [
-                "TestingHelpers"
+                "FoundationTestingHelpers"
             ]
         ),
 
         .target(
-            name: "URLHelpers",
+            name: "FoundationURLHelpers",
             dependencies: [
                 "FoundationHelpersMacroModule"
             ]
         ),
         .testTarget(
-            name: "URLHelpersTests",
+            name: "FoundationURLHelpersTests",
             dependencies: [
-                "URLHelpers"
+                "FoundationURLHelpers"
             ]
         ),
 
-        .target(name: "UserDefaultsHelpers"),
+        .target(name: "FoundationUserDefaultsHelpers"),
         .testTarget(
-            name: "UserDefaultsHelpersTests",
+            name: "FoundationUserDefaultsHelpersTests",
             dependencies: [
-                "TestingHelpers",
-                "UserDefaultsHelpers",
+                "FoundationTestingHelpers",
+                "FoundationUserDefaultsHelpers",
             ]
         ),
 
         .target(
-            name: "UUIDHelpers",
+            name: "FoundationUUIDHelpers",
             dependencies: [
                 "FoundationHelpersMacroModule"
             ]
         ),
         .testTarget(
-            name: "UUIDHelpersTests",
+            name: "FoundationUUIDHelpersTests",
             dependencies: [
-                "UUIDHelpers"
+                "FoundationUUIDHelpers"
             ]
         ),
     ]

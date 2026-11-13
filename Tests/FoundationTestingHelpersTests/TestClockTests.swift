@@ -1,7 +1,7 @@
 // Copyright © 2026 Brent Tunnicliff <brent@tunnicliff.dev>
 
+import FoundationTestingHelpers
 import Testing
-import TestingHelpers
 
 struct TestClockTests {
     @Test
